@@ -33,7 +33,9 @@ def do_cleanup_regex_and_strs():
 def do_cleanup():
 	do_cleanup_res()
 	do_cleanup_regex_and_strs()
+	his_text.config(state=NORMAL)
 	his_text.insert(END, 'CLEAN\n', 'red')
+	his_text.config(state=DISABLED)
 
 def do_reg():
 	if v.get() == 1: do_re_search()
