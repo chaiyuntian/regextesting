@@ -4,6 +4,7 @@
 import re
 import sys
 from urllib import urlopen
+import subprocess
 if sys.getdefaultencoding() != 'utf-8':
 	reload(sys)
 	sys.setdefaultencoding('utf-8')
@@ -25,6 +26,7 @@ def get_regex_and_strs():
 def do_cleanup_res():
 	res_text.config(state=NORMAL)
 	res_text.delete('1.0', END)
+	res_text.config(state=DISABLED)
 
 def do_cleanup_regex_and_strs():
 	reg_entry.delete('0', END)
@@ -57,6 +59,13 @@ def do_get_html():
 	html = urlopen(url).read()
 	str_text.delete('1.0', END)
 	str_text.insert(END, html)
+
+@my_decorator
+def do_get_cmd_output():
+	cmd = cmd_entry.get()
+	cmdlist = cmd.split()
+	str_text.delete('1.0', END)
+	str_text.insert(END, subprocess.check_output(cmdlist))
 
 @my_decorator
 def do_re_search():
@@ -151,12 +160,12 @@ if __name__ == '__main__':
 	
 	l4 = Label(win, text='testing strings', font=myfont)
 	l4.grid(row=6, column=0)
-	str_text = Text(win, font=myfont, height=10)
+	str_text = Text(win, font=myfont, height=9)
 	str_text.grid(row=7, column=0, columnspan=3, sticky=W+E+N+S)
 	
 	l5 = Label(win, text='results', font= myfont)
 	l5.grid(row=8, column=0)
-	res_text = Text(win, font=myfont, height=10, state=DISABLED)
+	res_text = Text(win, font=myfont, height=9, state=DISABLED)
 	res_text.tag_config('green',  foreground='#008000')
 	res_text.tag_config('maroon', foreground='#800000')
 	res_text.tag_config('red',    foreground='#ff0000')
@@ -170,22 +179,29 @@ if __name__ == '__main__':
 	UrlButton = Button(win, text='Get html', fg='blue', font=myfont, command=do_get_html, width=30)
 	UrlButton.grid(row=11, column=2)
 
-	l7 = Label(win, text='histroy operations', font=myfont)
-	l7.grid(row=0, column=3)
+	l7 = Label(win, text='get strings form cmd:', font=myfont)
+	l7.grid(row=12, column=0)
+	cmd_entry = Entry(win, font=myfont, fg='blue')
+	cmd_entry.grid(row=13, column=0, columnspan=2, sticky=W+E+N+S)
+	CmdButton = Button(win, text='Get output', fg='blue', font=myfont, command=do_get_cmd_output, width=30)
+	CmdButton.grid(row=13, column=2)
+
+	l8 = Label(win, text='histroy operations', font=myfont)
+	l8.grid(row=0, column=3)
 	his_text = Text(win, font=myfont, height=10, width=30, state=DISABLED)
 	his_text.tag_config('green',  foreground='#008000')
 	his_text.tag_config('maroon', foreground='#800000')
 	his_text.tag_config('red',    foreground='#ff0000')
 	his_text.tag_config('blue',   foreground='#0000ff')
-	his_text.grid(row=1, column=3, rowspan=11, sticky=W+E+N+S)
+	his_text.grid(row=1, column=3, rowspan=13, sticky=W+E+N+S)
 	
 	DoButton = Button(win, text='Do', fg='green', font=myfont, command=do_reg, width=30)
-	DoButton.grid(row=12, column=0)
+	DoButton.grid(row=14, column=0)
 	CopyButton = Button(win, text='Copy result', fg='green', font=myfont, command=do_copy_res, width=30)
-	CopyButton.grid(row=12, column=1)
+	CopyButton.grid(row=14, column=1)
 	CleanButton = Button(win, text='Clean', fg='red', font=myfont, command=do_cleanup, width=30)
-	CleanButton.grid(row=12, column=2)
+	CleanButton.grid(row=14, column=2)
 	QuitButton = Button(win, text='Quit', fg='red', font=myfont, command=win.quit, width=30)
-	QuitButton.grid(row=12, column=3)
+	QuitButton.grid(row=14, column=3)
 	
 	mainloop()
