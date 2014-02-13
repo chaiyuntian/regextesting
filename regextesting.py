@@ -55,7 +55,6 @@ def do_copy_res():
 def do_get_html():
 	url = url_entry.get()
 	str_text.delete('1.0', END)
-	str_text.insert(END, 'loading...')
 	html = urlopen(url).read()
 	str_text.delete('1.0', END)
 	str_text.insert(END, html)
@@ -70,6 +69,7 @@ def do_get_cmd_output():
 @my_decorator
 def do_re_search():
 	do_cleanup_res()
+	res_text.config(state=NORMAL)
 	regex, strs = get_regex_and_strs()
 	try:
 		res = re.search(regex, strs)
@@ -94,6 +94,7 @@ def do_re_search():
 @my_decorator
 def do_re_findall():
 	do_cleanup_res()
+	res_text.config(state=NORMAL)
 	regex, strs = get_regex_and_strs()
 	res = re.findall(regex, strs)
 	if len(res) != 0:
@@ -115,6 +116,7 @@ def do_re_findall():
 @my_decorator
 def do_re_sub():
 	do_cleanup_res()
+	res_text.config(state=NORMAL)
 	regex, strs = get_regex_and_strs()
 	rep_strs = rep_entry.get()
 	res = re.sub(regex, rep_strs, strs)
